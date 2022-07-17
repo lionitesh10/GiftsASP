@@ -1,0 +1,28 @@
+﻿<body onload="GetCartItems();">
+<br />
+<center>My Cart</center>
+<center><h3>Cart Items</h3><br><a href="/Items/CheckOut/">Checkout</a></center>
+<table id="CartElements" class="table">
+</table>
+<span>Total :: </span><span id="TotalId"></span>
+<script>
+        function GetCartItems(){
+            var CartItems = JSON.parse(localStorage.getItem("CartItems"));
+            var total = 0.0;
+            console.log("Cart Items Array Parsed ",CartItems);
+            let tab='<thead><tr><td><b>Item</b></td><td><b>Rate</b></td><td><b>Order Quantity</b></td><td><b>Category</b></td><td>Price</td><td><b>Action</b></td></tr></thead>';
+            for (var i = 0; i < CartItems.length; i++){
+                var subTotal = 0.0;
+                var parsed=JSON.parse(CartItems[i]);
+                console.log(parsed.ItemId);
+                console.log(parsed.ItemName);
+                subTotal = (parsed.ItemRate * parsed.ItemQtyOrder)
+                total = total + subTotal;
+                tab += `<tr><td>${parsed.ItemTitle}</td><td>${parsed.ItemRate}</td><td>${parsed.ItemQtyOrder}</td><td>${parsed.ItemCat_Title}</td><td>${subTotal}</td>><td>Edit | Remove</td>`;
+
+                document.getElementById("CartElements").innerHTML = tab;
+                document.getElementById("TotalId").innerText = total;
+            }
+        }
+</script>
+    </body>

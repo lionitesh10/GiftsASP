@@ -1,0 +1,20 @@
+﻿@using System.Collections.Generic;
+@using Gifts.Models;
+
+@{
+    ViewBag.Title = "Home Page";
+}
+@{
+    IEnumerable<ItemInventoryModel> ItemInventoryModels = ViewData["ItemsList"] as IEnumerable<ItemInventoryModel>;
+}
+
+@foreach (var item in ItemInventoryModels)
+{
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="~/ItemPictures/@item.Image_Path" alt="@item.Image_Path" width="250px" height="150px">
+        <div class="card-body">
+            <h5 class="card-title">@item.Title</h5>
+            <a href="/Items/Details/@item.Id" class="btn btn-primary">See Details</a>
+        </div>
+    </div>
+}

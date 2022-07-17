@@ -1,0 +1,71 @@
+﻿<body onload="GetCartItems();">
+    <br />
+    <table id="CartElements" class="table">
+    </table>
+    <span id="TotalId"></span>
+    <span class="btn-warning">@ViewBag.OutOfStockMessage</span>
+    <script>
+
+        function GetCartData() {
+            var CartItems = JSON.parse(localStorage.getItem("CartItems"));
+            return CartItems;
+        }
+
+        function GetCartItems() {
+            var CartItems = GetCartData();
+            console.log("Cart Items Array Parsed ", CartItems);
+            var total = 0.0;
+            let tab = '<thead><tr><td><b>Item</b></td><td><b>Rate</b></td><td><b>Order Quantity</b></td><td><b>Category</b></td><td>Price</td><td><b>Action</b></td></tr></thead>';
+            for (var i = 0; i < CartItems.length; i++) {
+                var parsed = JSON.parse(CartItems[i]);
+                console.log(parsed.ItemId);
+                console.log(parsed.ItemName);
+                var subTotal = 0.0;
+                subTotal = parsed.ItemQtyOrder * parsed.ItemRate;
+                total = total + subTotal;
+                tab += `<tr><td>${parsed.ItemTitle}</td><td>${parsed.ItemRate}</td><td>${parsed.ItemQtyOrder}</td><td>${parsed.ItemCat_Title}</td><td>${subTotal}</td><td>Edit | Remove</td>`;
+
+                document.getElementById("CartElements").innerHTML = tab;
+            }
+            document.getElementById("TotalId").innerHTML = "<b>Total :: " + total+"</b>";
+        }
+
+        function CheckOutCheck() {
+            var CartItems = GetCartData();
+            var CartsArray = []
+            for (var i = 0; i < CartItems.length; i++) {
+                CartsArray.push(JSON.parse(CartItems[i]));
+            }
+            var CartsJSON = {
+                "CartsArray": CartsArray
+            }
+            console.log("Carts JSON");
+            console.log(CartsJSON);
+            SendData(CartsArray);
+        }
+
+        function SendData(CartsArray) {
+            var CartsArray = JSON.stringify({ 'CartsArray': CartsArray });
+            $.ajax({
+                type: "POST",
+                url: '/Items/CheckOut',
+                dataType: 'JSON',
+                data: CartsArray,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data) {
+                        alert("Success!");
+                    }
+                },
+                error: function (response) {
+                    localStorage.clear();
+                    console.log(response);
+
+                }
+            });
+        }
+    </script>
+    <center><button class="btn btn-block btn-primary" onclick="CheckOutCheck();">Proceed To Checkout</button></center>
+</body>
+
+

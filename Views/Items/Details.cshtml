@@ -1,0 +1,157 @@
+﻿@model Gifts.Models.ItemInventoryModel
+
+<div>
+    <h4>ItemInventoryModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        @*<dt>
+                @Html.DisplayNameFor(model => model.Buying_Rate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Buying_Rate)
+            </dd>*@
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Selling_Rate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Selling_Rate)
+        </dd>
+
+        @*<dt>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Quantity)
+            </dd>*@
+
+        @*<dt>
+                @Html.DisplayNameFor(model => model.Category_Id)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Category_Id)
+            </dd>*@
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Image_Path)
+        </dt>
+
+        <dd>
+            <img src="~/ItemPictures/@Model.Image_Path" width="250px" height="250px" alt="@Model.Title" />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cat_Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cat_Title)
+        </dd>
+
+        @*<dt>
+                @Html.DisplayNameFor(model => model.Created_At)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Created_At)
+            </dd>*@
+    </dl>
+</div>
+<p>
+    <Label for="QuantityOrder">Quantity</Label>
+    <input type="number" name="Qty" max="@Model.Quantity" id="IpQuantity" class="form-control" />
+    <span id="qtyError" style="color:red;"></span>
+    <br />
+    <button class="btn btn-warning" onclick="AddToCart();">Add to Cart</button>
+    <br />
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+<script>
+
+    function AddToCart() {
+
+        var Qty = document.getElementById("IpQuantity").value;
+
+        var CartItem = {
+                ItemId:@Model.Id,
+                ItemTitle: "@Model.Title",
+                ItemDescription: "@Model.Description",
+                ItemRate:@Model.Selling_Rate,
+                ItemQuantity:@Model.Quantity,
+                ItemQtyOrder: Qty,
+                ItemImage_Path: "@Model.Image_Path",
+                ItemCat_Title: "@Model.Cat_Title"
+        }
+        var Cart = localStorage.getItem("CartItems");
+        if (Cart == null) {
+            let CartItemsArray = [];
+            CartItemsArray.push(JSON.stringify(CartItem));
+            localStorage.setItem("CartItems", JSON.stringify(CartItemsArray));
+        } else {
+            var CartCurrent = localStorage.getItem("CartItems");
+            var CartParsed = JSON.parse(CartCurrent);
+            CartParsed.push(JSON.stringify(CartItem));
+            localStorage.setItem("CartItems", JSON.stringify(CartParsed));
+            console.log(localStorage.getItem("CartItems"));
+        }
+        alert("Item Added to Cart");
+    }
+
+    @*function GetCartData() {
+        var Qty =document.getElementById("IpQuantity").value;
+        if (Qty <=@Model.Quantity) {
+            var item = {
+                "Item_Id":@Model.Id,
+                "Title": "@Model.Title",
+                "Description": "@Model.Description",
+                "Rate":@Model.Selling_Rate,
+                "Quantity":@Model.Quantity,
+                "QtyOrder": Qty,
+                "Image_Path": "@Model.Image_Path",
+                "Cat_Title": "@Model.Cat_Title"
+            }
+            var carts = localStorage.getItem("CartItems");
+            if (carts == null) {
+                items = []
+                var stringCart = JSON.stringify(item);
+                items.push(stringCart);
+                alert("Null");
+                localStorage.setItem("CartItems", items);
+                console.log(localStorage.getItem("CartItems"));
+            } else {
+                alert("Else");
+
+                var Items = localStorage.getItem("CartItems");
+                var itemsArray = Array(Items);
+                console.log(Items);
+                localStorage.setItem("CartItems", itemsArray);
+
+            }
+            console.log(localStorage.getItem("CartItems"));
+        } else {
+            document.getElementById("qtyError").innerText = "Out of range";
+        }
+    }*@
+</script>
